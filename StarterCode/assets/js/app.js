@@ -85,9 +85,19 @@ function renderXCircles(circlesGroup, newXScale, chosenXAxis) {
         
     return circlesGroup;
   }
+function renderXTextCircles(textGroup,newXScale, chosenXAxis){
+    d3.selectall(".stateAbbr")
+    .attr("x", d => newXScale(d[chosenXAxis]));
+    return textGroup;
+}
 
 // function used for updating circles group x with a transition to
 // new circles
+function renderYTextCircles(textGroup,newYScale, chosenYAxis){
+    d3.selectall(".stateAbbr")
+    .attr("y", d => newYScale(d[chosenYAxis]));
+    return textGroup;
+}
 function renderYCircles(circlesGroup, newYScale, chosenYAxis) {
 
     circlesGroup.transition()
@@ -192,12 +202,12 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", 10)
     .attr("fill", "blue");
-    chartGroup.append("g")
-    .classed("stateAbbr", true)
+    var textGroup = chartGroup.append("g")
     .selectAll("text")
     .data(stateData)
     .enter()
     .append("text")
+    .attr("class", "stateAbbr")
     .attr("text-anchor", "middle")
     .attr("class","stateText")
     .attr("x", d => xLinearScale(d[chosenXAxis]))
@@ -284,6 +294,7 @@ var circlesGroup = updateToolTip(chosenXAxis,chosenYAxis ,circlesGroup);
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis,chosenYAxis, circlesGroup);
 
+        renderXTextCircles(textGroup,xLinearScale, chosenXAxis);
         // changes classes to change bold text
         if (chosenXAxis === "poverty") {
           povertyLabel
@@ -343,6 +354,7 @@ labelsGroupY.selectAll("text")
     // updates tooltips with new info
     circlesGroup = updateToolTip(chosenXAxis,chosenYAxis, circlesGroup);
 
+    renderYTextCircles(textGroup,yLinearScale, chosenYAxis);
 
     // changes classes to change bold text
     if (chosenYAxis === "obesity") {
